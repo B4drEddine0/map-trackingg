@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYmFkcmVkZGluZTAwIiwiYSI6ImNsdzJ0cDJ1bTBtMnQyaW11NjBxczE3Z2kifQ.ockRcbgDpqVyMLsAv_tMgw';
+
+
+           // Retrieve coordinates from localStorage
+           const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates"));
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: storedCoordinates[0],
+            zoom: 14
+        });
+        
+        function refreshMap() {
+
+            const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates"));
+            
+
+            const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: storedCoordinates[0],
+            zoom: 14
+        });
+
+       
+       
+        
+            
+       
+        
+   
+       
+            new mapboxgl.Marker({ color: 'red' })
+                .setLngLat(storedCoordinates[0])
+                .addTo(map);
+      
+
+       // Add a line to represent the path
+    map.on('load', function () {
+        map.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': storedCoordinates
+                    }
+                }
+            },
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#00FF00',
+                'line-width': 8
+            }
+        });
+
+        // Check if tracking is stopped in browser storage
+         const trackingStopped = localStorage.getItem("trackingStopped");
+        if (trackingStopped === "true") {
+            // Remove the route layer from the map
+            map.removeLayer('route');
+        }
+    });
+
+
+        
+
+        
+
+        const marker = document.createElement('div');
+            marker.style.backgroundImage = 'url(images/truck.png)'; // Path to the image relative to the index file
+            marker.style.width = '80px'; // Set the width of the marker (adjust as needed)
+            marker.style.height = '80px'; // Set the height of the marker (adjust as needed)
+            marker.style.paddingLeft = '30px';
+            marker.style.backgroundSize = 'cover';
+            new mapboxgl.Marker(marker) 
+            .setLngLat(storedCoordinates[storedCoordinates.length - 1])
+            .addTo(map);
+
+
+            
+
+    }
+
+            // Call the refreshMap function initially
+            refreshMap();
+
+            // Auto-refresh the map every 10 seconds (adjust interval as needed)
+            setInterval(refreshMap, 10000);
+            
+    </script>
+</body>
+</html>
