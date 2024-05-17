@@ -25,7 +25,7 @@
 
 
            // Retrieve coordinates from localStorage
-           const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates"));
+           const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates")) || [[0, 0]];
 
         const map = new mapboxgl.Map({
             container: 'map',
@@ -36,7 +36,7 @@
         
         function refreshMap() {
 
-            const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates"));
+            const storedCoordinates = JSON.parse(window.localStorage.getItem("coordinates")) || [[0, 0]];
             
 
             const map = new mapboxgl.Map({
